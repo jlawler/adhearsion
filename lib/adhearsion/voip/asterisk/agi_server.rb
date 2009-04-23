@@ -54,9 +54,9 @@ module Adhearsion
             
           end
  
-         class RubyServer < ForkServer
+         class RubyFServer < ForkServer
             def initialize(port, host)
-              super(port, host, (1.0/0.0)) # (1.0/0.0) == Infinity
+              super(port, host)
             end
             
             def serve(io)
@@ -101,7 +101,7 @@ module Adhearsion
             
           end
         
-          DEFAULT_OPTIONS = { :server_class => ForkServer, :port => 4573, :host => "0.0.0.0" } unless defined? DEFAULT_OPTIONS
+          DEFAULT_OPTIONS = { :server_class => RubyFServer, :port => 4573, :host => "0.0.0.0" } unless defined? DEFAULT_OPTIONS
           attr_reader :host, :port, :server_class, :server
 
           def initialize(options = {})

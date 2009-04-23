@@ -19,13 +19,22 @@ module Adhearsion
             end
             def start
               @tcpServer = TCPServer.new(@host,@port)
+              trap("CLD"){
+                waitpid(Process.wait,Process::WNOHANG) rescue nil
+              }
+
               while @should_run
                 begin
                 sock=server.accept_nonblock
-                sleep(5) && next unless sock
-                fork { serv(sock)}
+                next unless sock
+                Process.detach fork {
+                  server.close 
+                  trap("INT") {  }
+                  serve(sock)
+                }
+                
                 rescue Errno::EAGAIN, Errno::ECONNABORTED, Errno::EPROTO, Errno::EINTR => e
-                  IO.select([server],[server],[server],4)
+                  IO.select([server],[server],[server],1)
                 end
               end
             end
