@@ -1,7 +1,9 @@
 # -*- ruby -*-
 ENV['RUBY_FLAGS'] = "-I#{%w(lib ext bin test).join(File::PATH_SEPARATOR)}"
-
 require 'rubygems'
+#require early, and with specific version, so it won't puke later because
+#"we already grabbed a different version, blah blah blah"
+gem 'activesupport','2.2.2'
 require 'rake/gempackagetask'
 
 begin
